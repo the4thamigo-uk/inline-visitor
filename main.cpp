@@ -8,8 +8,6 @@ struct output_default {
   }
 };
 
-// usage
-
 class node1;
 class node2;
 class node3;
