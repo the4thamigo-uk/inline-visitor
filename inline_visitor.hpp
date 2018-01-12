@@ -24,7 +24,7 @@ class ivisitor {
     virtual void visit(T& node) = 0;
 };
 
-template<typename T, template<typename> typename D> 
+template<typename T, template<typename> class D> 
 class visitor : public ivisitor<T>{
   public:
     visitor():
@@ -42,7 +42,7 @@ class visitor : public ivisitor<T>{
     std::function<void(T&)> f_;
 };
 
-template<template<typename> typename D, typename ...T>
+template<template<typename> class D, typename ...T>
 class compound_visitor : public visitor<T, D>... {
   public:
     template<typename U>
@@ -56,18 +56,18 @@ class compound_visitor : public visitor<T, D>... {
 };
 
 template<typename C, typename F>
-auto set(C& c, F f) {
+void set(C& c, F f) {
   c.set(f);
 }
 
 template<typename C, typename F, typename ...Fs>
-auto set(C& c, F f, Fs... fs) {
+void set(C& c, F f, Fs... fs) {
   set(c, f);
   set(c, fs...); 
 }
 
 template<typename C, typename ...F>
-auto make_compound_visitor(F... f) {
+auto make_compound_visitor(F... f) -> C {
   C c;
   set(c, f...);
   return c;

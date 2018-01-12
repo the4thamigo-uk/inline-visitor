@@ -1,2 +1,2 @@
 build:
-	g++ main.cpp -o test
+	g++ -std=c++11 -Wall -pedantic main.cpp -o test
