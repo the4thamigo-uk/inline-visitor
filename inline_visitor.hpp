@@ -17,13 +17,20 @@ struct arg_type<void(T&)> {
   typedef T type;
 };
 
+template<typename T>
+class ivisitor {
+  public:
+    virtual ~ivisitor() = default;
+    virtual void visit(T& node) = 0;
+};
+
 template<typename T, template<typename> typename D> 
-class visitor {
+class visitor : public ivisitor<T>{
   public:
     visitor():
       f_(D<T>()) {
     }
-    void visit(T& node) {
+    void visit(T& node) override {
       if(f_) {
         f_(node);
       }        
