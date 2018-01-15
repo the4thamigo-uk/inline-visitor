@@ -45,30 +45,31 @@ class visitor : public ivisitor<T>{
 template<template<typename> class D, typename ...T>
 class compound_visitor : public visitor<T, D>... {
   public:
+
+    compound_visitor() = default;
+
+    template<typename ...F>
+    compound_visitor(F... f) {
+      set(f...);
+    }
+    template<typename F, typename ...Fs>
+    void set(F f, Fs... fs) {
+      set(f);
+      set(fs...); 
+    }
+
     template<typename U>
     void visit(U& node) {
       this->visitor<U, D>::visit(node);
     }
+
     template<typename F>
     void set(F f) {
       this->visitor<typename arg_type<F>::type, D>::set(f);
     }
 };
 
-template<typename C, typename F>
-void set(C& c, F f) {
-  c.set(f);
-}
-
-template<typename C, typename F, typename ...Fs>
-void set(C& c, F f, Fs... fs) {
-  set(c, f);
-  set(c, fs...); 
-}
-
 template<typename C, typename ...F>
 auto make_compound_visitor(F... f) -> C {
-  C c;
-  set(c, f...);
-  return c;
+  return c(f...);
 }
